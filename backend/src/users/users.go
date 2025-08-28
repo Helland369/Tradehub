@@ -14,7 +14,7 @@ type Address struct {
 }
 
 type Users struct {
-	ID             primitive.ObjectID    `json:"id,omitempty" bson:"_id"`
+	ID             primitive.ObjectID    `json:"_id,omitempty" bson:"_id"`
 	Fname          string                `json:"fname" bson:"fname"`
 	Lname          string                `json:"lname" bson:"lname"`
 	Email          string                `json:"email" bson:"email"`
