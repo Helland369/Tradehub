@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v3"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -15,11 +15,11 @@ import (
 )
 
 func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
+
+	if err := godotenv.Load(".env"); err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
-
+	
 	MONGODB := os.Getenv("MONGODB")
 	clientOptions := options.Client().ApplyURI(MONGODB)
 	client, err := mongo.Connect(context.Background(), clientOptions)
@@ -28,17 +28,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = client.Ping(context.Background(), nil)
-
-	if err != nil {
+	if err = client.Ping(context.Background(), nil); err != nil {
 		log.Fatal(err)
 	}
-
+	
 	fmt.Println("Connected to mongodb!")
 
 	app := fiber.New()
 
-	app.Get("/users", get_user(client))
+	app.Get("/users", users.GetUser(client))
 	// app.Post("/users", create_user)
 	// app.Patch("/users/:id", update_user)
 	// app.Delete("/users/:id", delete_users)
