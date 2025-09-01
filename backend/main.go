@@ -35,9 +35,9 @@ func main() {
 	fmt.Println("Connected to mongodb!")
 
 	app := fiber.New()
-
+	
 	app.Get("/users", users.GetUser(client))
-	// app.Post("/users", create_user)
+	app.Post("/create_users", users.PostUser(client))
 	// app.Patch("/users/:id", update_user)
 	// app.Delete("/users/:id", delete_users)
 
