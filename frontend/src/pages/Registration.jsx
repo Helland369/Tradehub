@@ -32,7 +32,7 @@ function Registration() {
       userName: formData.userName,
       address: {
         street: formData.street,
-        city: formData.street,
+        city: formData.city,
         zip: parseInt(formData.zip, 10),
         country: formData.country,
       },
@@ -42,7 +42,7 @@ function Registration() {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/create_user", {
+      const res = await fetch("http://localhost:3000/create_users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
