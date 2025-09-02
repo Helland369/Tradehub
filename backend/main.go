@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -34,7 +35,13 @@ func main() {
 	
 	fmt.Println("Connected to mongodb!")
 
-	app := fiber.New()
+app := fiber.New()
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:5173"},
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders: []string{"origin", "Content-Type", "Accept"},
+	}))
 	
 	app.Get("/users", users.GetUser(client))
 	app.Post("/create_users", users.PostUser(client))
