@@ -43,7 +43,7 @@ app := fiber.New()
 		AllowHeaders: []string{"origin", "Content-Type", "Accept"},
 	}))
 	
-	app.Get("/users", users.GetUser(client))
+	app.Post("/login_users", users.GetUser(client))
 	app.Post("/create_users", users.PostUser(client))
 	// app.Patch("/users/:id", update_user)
 	// app.Delete("/users/:id", delete_users)
