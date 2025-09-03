@@ -42,7 +42,7 @@ function Registration() {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/create_users", {
+      const res = await fetch("http://localhost:4000/create_users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

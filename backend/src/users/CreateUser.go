@@ -22,7 +22,7 @@ func CreateUser(client *mongo.Client) fiber.Handler {
 		var user Users
 		if err := c.Bind().Body(&user); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			  "error": "cannot parse JSON",
+			  "error": "cannot parse JSON!",
 			})
 		}
 
