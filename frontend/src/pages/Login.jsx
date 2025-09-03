@@ -22,7 +22,7 @@ function Login() {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/get_users", {
+      const res = await fetch("http://localhost:4000/login_users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,7 +60,7 @@ function Login() {
         value={formData.password}
         onChange={handleChange}
       />
-      <button type="submit"></button>
+      <button type="submit">Login</button>
     </form>
   );
 }

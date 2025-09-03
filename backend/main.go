@@ -50,7 +50,7 @@ app := fiber.New()
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "6000"
+		port = "3000"
 	}
 
 	log.Fatal(app.Listen("0.0.0.0:" + port))
