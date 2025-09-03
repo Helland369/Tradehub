@@ -15,7 +15,7 @@ func hashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func PostUser(client *mongo.Client) fiber.Handler {
+func CreateUser(client *mongo.Client) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		usersColelction := client.Database("tradehub").Collection("users")
 

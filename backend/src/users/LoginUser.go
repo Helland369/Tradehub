@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func GetUser(client *mongo.Client) fiber.Handler {
+func LoginUser(client *mongo.Client) fiber.Handler {
 	return func(c fiber.Ctx) error {
 
 		users := client.Database("tradehub").Collection("users")
