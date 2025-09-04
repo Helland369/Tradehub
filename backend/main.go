@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	jwtware "github.com/saveblush/gofiber3-contrib/jwt"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/joho/godotenv"
@@ -20,7 +21,7 @@ func main() {
 	if err := godotenv.Load(".env"); err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
-	
+
 	MONGODB := os.Getenv("MONGODB")
 	clientOptions := options.Client().ApplyURI(MONGODB)
 	client, err := mongo.Connect(context.Background(), clientOptions)
@@ -32,22 +33,28 @@ func main() {
 	if err = client.Ping(context.Background(), nil); err != nil {
 		log.Fatal(err)
 	}
-	
+
 	fmt.Println("Connected to mongodb!")
 
-app := fiber.New()
+	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:5173"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders: []string{"origin", "Content-Type", "Accept"},
 	}))
-	
+
+	jwtMiddleWare := jwtware.New(jwtware.Config{
+		SigningKey: jwtware.SigningKey{Key: []byte("secret")},
+	})
+
 	app.Post("/login_users", users.LoginUser(client))
 	app.Post("/create_users", users.CreateUser(client))
-	// app.Patch("/users/:id", update_user)
-	// app.Delete("/users/:id", delete_users)
 
+	protected := app.Group("/api", jwtMiddleWare)
+
+	protected.Get("/profile", users.Profile(client))
+	
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"
