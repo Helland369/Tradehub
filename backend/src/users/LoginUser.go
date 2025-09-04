@@ -2,8 +2,10 @@ package users
 
 import (
 	"context"
+	"time"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
@@ -44,9 +46,24 @@ func LoginUser(client *mongo.Client) fiber.Handler {
 			})
 		}
 
-		return c.JSON(fiber.Map{
-			"message": "Login success",
-			"user":    user.UserName,
-		})
+		claims := jwt.MapClaims{
+			"userName": user.UserName,
+			"password": user.PasswordHash,
+			"exp":      time.Now().Add(time.Hour * 72).Unix(),
+		}
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+		t, err := token.SignedString([]byte("secret"))
+		if err != nil {
+			return c.SendStatus(fiber.StatusInternalServerError)
+		}
+		
+		
+		// return c.JSON(fiber.Map{
+		// 	"message": "Login success",
+		// 	"user":    user.UserName,
+		// })
+		return c.JSON(fiber.Map{"token": t})
 	}
 }
