@@ -34,16 +34,18 @@ function Login() {
       console.log("Server response: ", data);
 
       if (res.ok) {
+        localStorage.setItem("token", data.token)
         alert("Login successfully logged in!");
       } else {
         alert("Error: ", data.error);
       }
+
     } catch (err) {
       console.log("Ferch error: ", err);
       alert("Something went wrong!");
     }
   };
-
+  
   return (
     <form className="login-form" onSubmit={handelSubmit}>
       <label name="userName">User name</label>

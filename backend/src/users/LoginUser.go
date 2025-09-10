@@ -59,11 +59,6 @@ func LoginUser(client *mongo.Client) fiber.Handler {
 			return c.SendStatus(fiber.StatusInternalServerError)
 		}
 		
-		
-		// return c.JSON(fiber.Map{
-		// 	"message": "Login success",
-		// 	"user":    user.UserName,
-		// })
 		return c.JSON(fiber.Map{"token": t})
 	}
 }
