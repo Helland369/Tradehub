@@ -45,21 +45,42 @@ func EditUser(client *mongo.Client) fiber.Handler {
 		
 		users := client.Database("tradehub").Collection("users")
 
-		update := bson.M{
-			"$set": bson.M{
-				"Fname": body.Fname,
-				"lname": body.Lname,
-				"email": body.Email,
-				"userName": body.UserName,
-				"street": body.Street,
-				"city": body.City,
-				"zip": body.Zip,
-				"country": body.Country,
-				"phone": body.Phone,
-				"password": body.Password,
-			},
+		updateFields := bson.M{}
+
+		if body.Fname != "" {
+			updateFields["fname"] = body.Fname
 		}
-		
+		if body.Lname != "" {
+			updateFields["lname"] = body.Lname
+		}
+		if body.Email != "" {
+			updateFields["email"] = body.Email
+		}
+		if body.UserName != "" {
+			updateFields["userName"] = body.UserName
+		}
+		if body.Street != "" {
+			updateFields["address.street"] = body.Street
+		}
+		if body.City != "" {
+			updateFields["address.city"] = body.City
+		}
+		if body.Zip != "" {
+			updateFields["address.zip"] = body.Zip
+		}
+		if body.Country != "" {
+			updateFields["address.country"] = body.Country
+		}
+		if body.Phone != "" {
+			updateFields["phone"] = body.Phone
+		}
+		if body.Password != "" {
+			hashed, _:= hashPassword(body.Password)
+			updateFields["passwordHash"] = hashed
+		}
+
+		update := bson.M{"$set": updateFields}
+
 		_, err = users.UpdateOne(context.TODO(), bson.M{"_id": objID}, update)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
