@@ -3,6 +3,7 @@ import NavBar from "./components/NavBar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
+import EditUser from "./pages/EditUser";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
+          <Route path="/edit" element={<EditUser />} />
         </Routes>
       </main>
     </div>

@@ -41,7 +41,8 @@ func main() {
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:5173"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders: []string{"origin", "Content-Type", "Accept"},
+		AllowHeaders: []string{"origin", "Content-Type", "Accept", "Authorization"},
+		AllowCredentials: true,
 	}))
 
 	jwtMiddleWare := jwtware.New(jwtware.Config{
@@ -50,11 +51,11 @@ func main() {
 
 	app.Post("/login_users", users.LoginUser(client))
 	app.Post("/create_users", users.CreateUser(client))
-	app.Post("/edit_user", users.EditUser(client))
 	
 	protected := app.Group("/api", jwtMiddleWare)
 
 	protected.Get("/profile", users.Profile(client))
+	protected.Post("/edit_user", users.EditUser(client))
 	
 	port := os.Getenv("PORT")
 	if port == "" {
