@@ -6,10 +6,10 @@ import (
 	"log"
 	"os"
 
-	jwtware "github.com/saveblush/gofiber3-contrib/jwt"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/joho/godotenv"
+	jwtware "github.com/saveblush/gofiber3-contrib/jwt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -50,7 +50,8 @@ func main() {
 
 	app.Post("/login_users", users.LoginUser(client))
 	app.Post("/create_users", users.CreateUser(client))
-
+	app.Post("/edit_user", users.EditUser(client))
+	
 	protected := app.Group("/api", jwtMiddleWare)
 
 	protected.Get("/profile", users.Profile(client))
