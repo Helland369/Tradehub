@@ -48,7 +48,7 @@ func LoginUser(client *mongo.Client) fiber.Handler {
 
 		claims := jwt.MapClaims{
 			"userName": user.UserName,
-			"_ID": user.ID,
+			"id": user.ID.Hex(),
 			"exp":      time.Now().Add(time.Hour * 72).Unix(),
 		}
 

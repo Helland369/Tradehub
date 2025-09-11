@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,7 +23,7 @@ func EditUser(client *mongo.Client) fiber.Handler {
 			Zip string `json:"zip"`
 			Country string `json:"country"`
 			Phone string `json:"phone"`
-			Password string `json:"Password"`
+			Password string `json:"password"`
 		}
 
 		if err := c.Bind().Body(&body); err != nil {
@@ -31,7 +32,11 @@ func EditUser(client *mongo.Client) fiber.Handler {
 			})
 		}
 
-		objID, err := primitive.ObjectIDFromHex(body.ID)
+		userToken := c.Locals("user").(*jwt.Token)
+		claims := userToken.Claims.(jwt.MapClaims)
+		usrID := claims["id"].(string)
+		
+		objID, err := primitive.ObjectIDFromHex(usrID)
 		if err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "invalid user ID",
@@ -42,7 +47,6 @@ func EditUser(client *mongo.Client) fiber.Handler {
 
 		update := bson.M{
 			"$set": bson.M{
-				"ID": body.ID,
 				"Fname": body.Fname,
 				"lname": body.Lname,
 				"email": body.Email,

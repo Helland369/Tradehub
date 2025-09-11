@@ -17,6 +17,9 @@ function NavBar() {
         <Link to="/registration" className="nav-link">
           Registration
         </Link>
+        <Link to="/edit" className="nav-link">
+          Edit
+        </Link>
       </div>
     </nav>
   );
