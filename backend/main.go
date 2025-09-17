@@ -56,6 +56,7 @@ func main() {
 
 	protected.Get("/profile", users.Profile(client))
 	protected.Post("/edit_user", users.EditUser(client))
+	protected.Post("/create_listing", users.CreateListing(client))
 	
 	port := os.Getenv("PORT")
 	if port == "" {
