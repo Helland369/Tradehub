@@ -37,19 +37,7 @@ function CreateListing() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // const body = {
-    //   title: formData.title,
-    //   description: formData.description,
-    //   category: formData.category,
-    //   condition: formData.condition,
-    //   startingPrice: parseFloat(formData.startingPrice),
-    //   buyPrice: formData.buyPrice ? parseFloat(formData.buyPrice) : null,
-    //   isAuction: formData.isAuction,
-    //   endTime: formData.endTime,
-    //   location: formData.location,
-    // };
-
-    const form = formData();
+    const form = new FormData();
     form.append("title", formData.title);
     form.append("description", formData.description);
     form.append("category", formData.category);
@@ -58,7 +46,7 @@ function CreateListing() {
     if (formData.buyPrice) form.append("buyPrice", formData.buyPrice);
     form.append("isAuction", formData.isAuction);
     form.append("endTime", formData.endTime);
-    form.append("loaction", formData.location);
+    form.append("location", formData.location);
 
     if (formData.images) {
       form.append("images", formData.images);
@@ -157,7 +145,7 @@ function CreateListing() {
       <input
         name="isAuction"
         type="checkbox"
-        value={formData.isAuction}
+        checked={formData.isAuction}
         onChange={handleChange}
       />
 
