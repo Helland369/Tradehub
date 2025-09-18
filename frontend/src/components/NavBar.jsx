@@ -30,6 +30,9 @@ function NavBar() {
             <Link to="/edit" className="nav-link">
               Edit
             </Link>
+            <Link to="/createListing" className="nav-link">
+              Create listing
+            </Link>
             <Link
               to="/"
               className="nav-link"
