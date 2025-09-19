@@ -53,7 +53,7 @@ function CreateListing() {
     }
 
     try {
-      const res = await fetch("http://localhost:4000/create_listing", {
+      const res = await fetch("http://localhost:4000/api/create_listing", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -152,7 +152,7 @@ function CreateListing() {
       <label name="endTime">Set the end time</label>
       <input
         name="endTime"
-        type="date"
+        type="datetime-local"
         value={formData.endTime}
         onChange={handleChange}
       />

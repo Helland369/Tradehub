@@ -47,7 +47,7 @@ func CreateListing(client *mongo.Client) fiber.Handler {
 		fileHadler, err := c.FormFile("images")
 		var imagePath string
 		if err == nil && fileHadler != nil {
-			imagePath = fmt.Sprintf("./uploades/%s", fileHadler.Filename)
+			imagePath = fmt.Sprintf("./uploads/%s", fileHadler.Filename)
 			if err := c.SaveFile(fileHadler, imagePath); err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 					"error": "failed to save image",
