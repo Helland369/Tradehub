@@ -3,6 +3,7 @@ package users
 import (
 	"context"
 	"fmt"
+	"os"
 	"strconv"
 	"time"
 
@@ -44,15 +45,31 @@ func CreateListing(client *mongo.Client) fiber.Handler {
 		}
 		location := c.FormValue("location")
 
-		fileHadler, err := c.FormFile("images")
-		var imagePath string
-		if err == nil && fileHadler != nil {
-			imagePath = fmt.Sprintf("./uploads/%s", fileHadler.Filename)
-			if err := c.SaveFile(fileHadler, imagePath); err != nil {
+		if _, err := os.Stat("./uploads"); os.IsNotExist(err) {
+			if err := os.MkdirAll("./uploads", os.ModePerm); err != nil {
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"error": "failed to create uploads directory",
+				})
+			}
+		}
+		
+		form, err := c.MultipartForm()
+		if err != nil {
+			return  c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "failed to read multipart form",
+			})
+		}
+
+		files := form.File["images"]
+		var imagePaths []string
+		for _, file := range files {
+			path := fmt.Sprintf("./uploads/%s", file.Filename)
+			if err := c.SaveFile(file, path); err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 					"error": "failed to save image",
 				})
 			}
+			imagePaths = append(imagePaths, path)
 		}
 
 		newListing := Listing{
@@ -61,7 +78,7 @@ func CreateListing(client *mongo.Client) fiber.Handler {
 			Description:   description,
 			Category:      category,
 			Condition:     condition,
-			Images:        []string{imagePath},
+			Images:        imagePaths,
 			StartingPrice: startingPrice,
 			BuyPrice:      buyPrice,
 			CurrentBid:    0,

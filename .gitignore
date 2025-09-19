@@ -142,3 +142,6 @@ vite.config.ts.timestamp-*
 # GO / backend
 /backend/main
 /backend/tmp
+
+# user uploaded images
+/backend/uploads
