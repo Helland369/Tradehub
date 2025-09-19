@@ -25,7 +25,7 @@ function CreateListing() {
     if (type === "checkbox") {
       newValue = checked;
     } else if (type === "file") {
-      newValue = files[0];
+      newValue = files;
     }
 
     setFormData((prev) => ({
@@ -49,7 +49,9 @@ function CreateListing() {
     form.append("location", formData.location);
 
     if (formData.images) {
-      form.append("images", formData.images);
+      for (let i = 0; i < formData.images.length; i++) {
+        form.append("images", formData.images[i]);
+      }
     }
 
     try {
@@ -172,6 +174,7 @@ function CreateListing() {
         name="images"
         type="file"
         accept="image/*"
+        multiple
         onChange={handleChange}
       />
 
