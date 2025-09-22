@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import "../styles/Registration.css";
+
 function Registration() {
   const [formData, setFormData] = useState({
     fname: "",
@@ -65,89 +67,95 @@ function Registration() {
   };
 
   return (
-    <form name="registration-form" onSubmit={handleSubmit}>
-      <label name="fname">First Name</label>
-      <input
-        name="fname"
-        placeholder="First name"
-        value={formData.fname}
-        onChange={handleChange}
-      />
+    <div id="registration-container">
+      <form
+        name="registration-form"
+        id="registration-form"
+        onSubmit={handleSubmit}
+      >
+        <label name="fname">First Name</label>
+        <input
+          name="fname"
+          placeholder="First name"
+          value={formData.fname}
+          onChange={handleChange}
+        />
 
-      <label name="lname">Last Name</label>
-      <input
-        name="lname"
-        placeholder="Last name"
-        value={formData.lname}
-        onChange={handleChange}
-      />
+        <label name="lname">Last Name</label>
+        <input
+          name="lname"
+          placeholder="Last name"
+          value={formData.lname}
+          onChange={handleChange}
+        />
 
-      <label name="email">Email</label>
-      <input
-        name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-      />
+        <label name="email">Email</label>
+        <input
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+        />
 
-      <label name="userName"> User name</label>
-      <input
-        name="userName"
-        placeholder="User name"
-        value={formData.userName}
-        onChange={handleChange}
-      />
+        <label name="userName"> User name</label>
+        <input
+          name="userName"
+          placeholder="User name"
+          value={formData.userName}
+          onChange={handleChange}
+        />
 
-      <label name="street">Street</label>
-      <input
-        name="street"
-        placeholder="Street"
-        value={formData.street}
-        onChange={handleChange}
-      />
+        <label name="street">Street</label>
+        <input
+          name="street"
+          placeholder="Street"
+          value={formData.street}
+          onChange={handleChange}
+        />
 
-      <label name="city">City</label>
-      <input
-        name="city"
-        placeholder="City"
-        value={formData.city}
-        onChange={handleChange}
-      />
+        <label name="city">City</label>
+        <input
+          name="city"
+          placeholder="City"
+          value={formData.city}
+          onChange={handleChange}
+        />
 
-      <label name="zip">Zip code</label>
-      <input
-        name="zip"
-        placeholder="Zip code"
-        value={formData.zip}
-        onChange={handleChange}
-      />
+        <label name="zip">Zip code</label>
+        <input
+          name="zip"
+          placeholder="Zip code"
+          value={formData.zip}
+          onChange={handleChange}
+        />
 
-      <label name="country">Country</label>
-      <input
-        name="country"
-        placeholder="Country"
-        value={formData.country}
-        onChange={handleChange}
-      />
+        <label name="country">Country</label>
+        <input
+          name="country"
+          placeholder="Country"
+          value={formData.country}
+          onChange={handleChange}
+        />
 
-      <label name="phone">Phone number</label>
-      <input
-        name="phone"
-        placeholder="Phone number"
-        value={formData.phone}
-        onChange={handleChange}
-      />
+        <label name="phone">Phone number</label>
+        <input
+          name="phone"
+          placeholder="Phone number"
+          value={formData.phone}
+          onChange={handleChange}
+        />
 
-      <label name="password">Password</label>
-      <input
-        name="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
-      />
+        <label name="password">Password</label>
+        <input
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+        />
 
-      <button type="submit">Create user</button>
-    </form>
+        <button type="submit">Create user</button>
+      </form>
+    </div>
   );
 }
 
