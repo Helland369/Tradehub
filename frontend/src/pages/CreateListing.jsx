@@ -30,6 +30,11 @@ function CreateListing() {
       newValue = files;
     }
 
+    if (type === "textarea" || e.target.tagName.toLowerCase() === "textarea") {
+      e.target.style.height = "auto";
+      e.target.style.height = e.target.scrollHeight + "px";
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: newValue,
