@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import "../styles/CreateListing.css";
+
 function CreateListing() {
   const [formData, setFormData] = useState({
     title: "",
@@ -78,110 +80,116 @@ function CreateListing() {
   };
 
   return (
-    <form name="create-listing-form" onSubmit={handleSubmit}>
-      <label name="title">Title</label>
-      <input
-        name="title"
-        placeholder="Title"
-        value={formData.title}
-        onChange={handleChange}
-        required
-      />
-
-      <label name="description">Description</label>
-      <textarea
-        name="description"
-        placeholder="Description"
-        value={formData.description}
-        onChange={handleChange}
-        required
-      />
-
-      <label name="category">Category</label>
-      <select
-        name="category"
-        value={formData.category}
-        onChange={handleChange}
-        required
+    <div id="create-listing-container">
+      <form
+        name="create-listing-form"
+        id="create-listings-form"
+        onSubmit={handleSubmit}
       >
-        <option value="">Please select an option</option>
-        <option value="Technology">Technology</option>
-        <option value="Clothes">Clothes</option>
-        {/*TODO Add more categorys...*/}
-      </select>
+        <label name="title">Title</label>
+        <input
+          name="title"
+          placeholder="Title"
+          value={formData.title}
+          onChange={handleChange}
+          required
+        />
 
-      <label name="condition">Condition</label>
-      <select
-        name="condition"
-        value={formData.condition}
-        onChange={handleChange}
-        required
-      >
-        <option value="">Select an option</option>
-        <option value="New">New</option>
-        <option value="Used">Used</option>
-        <option value="Lightly used">Lightly used</option>
-        <option value="Heavily used">Heavily used</option>
-      </select>
+        <label name="description">Description</label>
+        <textarea
+          name="description"
+          placeholder="Description"
+          value={formData.description}
+          onChange={handleChange}
+          required
+        />
 
-      <label name="startingPrice">Starting price</label>
-      <input
-        name="startingPrice"
-        placeholder="Starting price"
-        type="number"
-        value={formData.startingPrice}
-        onChange={handleChange}
-        required
-      />
+        <label name="category">Category</label>
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Please select an option</option>
+          <option value="Technology">Technology</option>
+          <option value="Clothes">Clothes</option>
+          {/*TODO Add more categorys...*/}
+        </select>
 
-      <label name="buyPrice">Buy price (optional)</label>
-      <input
-        name="buyPrice"
-        placeholder="Buy price"
-        type="number"
-        value={formData.buyPrice}
-        onChange={handleChange}
-      />
+        <label name="condition">Condition</label>
+        <select
+          name="condition"
+          value={formData.condition}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select an option</option>
+          <option value="New">New</option>
+          <option value="Used">Used</option>
+          <option value="Lightly used">Lightly used</option>
+          <option value="Heavily used">Heavily used</option>
+        </select>
 
-      <label name="isAuction">This is an auction</label>
-      <input
-        name="isAuction"
-        type="checkbox"
-        checked={formData.isAuction}
-        onChange={handleChange}
-      />
+        <label name="startingPrice">Starting price</label>
+        <input
+          name="startingPrice"
+          placeholder="Starting price"
+          type="number"
+          value={formData.startingPrice}
+          onChange={handleChange}
+          required
+        />
 
-      <label name="endTime">Set the end time</label>
-      <input
-        name="endTime"
-        type="datetime-local"
-        value={formData.endTime}
-        onChange={handleChange}
-      />
+        <label name="buyPrice">Buy price (optional)</label>
+        <input
+          name="buyPrice"
+          placeholder="Buy price"
+          type="number"
+          value={formData.buyPrice}
+          onChange={handleChange}
+        />
 
-      <label name="location">Lcoation</label>
-      <input
-        name="location"
-        placeholder="Where is the item?"
-        value={formData.location}
-        onChange={handleChange}
-        required
-      />
+        <label name="isAuction">This is an auction</label>
+        <input
+          name="isAuction"
+          type="checkbox"
+          checked={formData.isAuction}
+          onChange={handleChange}
+        />
 
-      {/*Work in progress...*/}
-      <label name="images">Upload images</label>
-      <input
-        name="images"
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleChange}
-      />
+        <label name="endTime">Set the end time</label>
+        <input
+          name="endTime"
+          type="datetime-local"
+          value={formData.endTime}
+          onChange={handleChange}
+        />
 
-      <button type="submit">Create listing</button>
+        <label name="location">Lcoation</label>
+        <input
+          name="location"
+          placeholder="Where is the item?"
+          value={formData.location}
+          onChange={handleChange}
+          required
+        />
 
-      {message && <p>{message}</p>}
-    </form>
+        {/*Work in progress...*/}
+        <label name="images">Upload images</label>
+        <input
+          name="images"
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleChange}
+        />
+
+        <button type="submit">Create listing</button>
+
+        {message && <p>{message}</p>}
+      </form>
+    </div>
   );
 }
 

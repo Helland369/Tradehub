@@ -1,0 +1,51 @@
+#create-listing-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* background-color: ; */
+}
+
+#create-listings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    background: grey;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+#create-listings-form label {
+    font-weight: bold;
+}
+
+#create-listings-form input,
+#create-listings-form textarea,
+#create-listings-form select,
+#create-listings-form button {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+#create-listings-form button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#create-listings-form button {
+    background: #1e40af;
+}
+
+#create-listings-form textarea {
+    resize: none;
+    overflow: hidden;
+    min-height: 3rem;
+}
