@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import "../styles/Login.css";
+
 function Login() {
   const [formData, setFormData] = useState({
     userName: "",
@@ -34,36 +36,37 @@ function Login() {
       console.log("Server response: ", data);
 
       if (res.ok) {
-        localStorage.setItem("token", data.token)
+        localStorage.setItem("token", data.token);
         alert("Login successfully logged in!");
       } else {
         alert("Error: ", data.error);
       }
-
     } catch (err) {
       console.log("Ferch error: ", err);
       alert("Something went wrong!");
     }
   };
-  
+
   return (
-    <form className="login-form" onSubmit={handelSubmit}>
-      <label name="userName">User name</label>
-      <input
-        name="userName"
-        placeholder="User name"
-        value={formData.userName}
-        onChange={handleChange}
-      />
-      <label name="password"></label>
-      <input
-        name="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
-      />
-      <button type="submit">Login</button>
-    </form>
+    <div id="login-container">
+      <form name="login-form" id="login-form" onSubmit={handelSubmit}>
+        <label name="userName">User name</label>
+        <input
+          name="userName"
+          placeholder="User name"
+          value={formData.userName}
+          onChange={handleChange}
+        />
+        <label name="password"></label>
+        <input
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+        />
+        <button type="submit">Login</button>
+      </form>
+    </div>
   );
 }
 
