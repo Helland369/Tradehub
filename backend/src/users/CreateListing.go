@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v3"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -45,6 +46,20 @@ func CreateListing(client *mongo.Client) fiber.Handler {
 		}
 		location := c.FormValue("location")
 
+		v := c.Locals("userId")
+		idStr, ok := v.(string)
+		if !ok || idStr == "" {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+				"error": "unauthorized",
+			})
+		}
+		userId, err := primitive.ObjectIDFromHex(idStr)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "invalid user id",
+			})
+		}
+
 		if _, err := os.Stat("./uploads"); os.IsNotExist(err) {
 			if err := os.MkdirAll("./uploads", os.ModePerm); err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -52,10 +67,10 @@ func CreateListing(client *mongo.Client) fiber.Handler {
 				})
 			}
 		}
-		
+
 		form, err := c.MultipartForm()
 		if err != nil {
-			return  c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "failed to read multipart form",
 			})
 		}
@@ -74,6 +89,7 @@ func CreateListing(client *mongo.Client) fiber.Handler {
 
 		newListing := Listing{
 			ID:            primitive.NewObjectID(),
+			UserID:        userId,
 			Title:         title,
 			Description:   description,
 			Category:      category,
@@ -85,6 +101,8 @@ func CreateListing(client *mongo.Client) fiber.Handler {
 			IsAuction:     isAuction,
 			EndTime:       endTime,
 			Location:      location,
+			CreatedAt:     time.Now().UTC(),
+			UpdatedAt:     time.Now().UTC(),
 		}
 
 		listings := client.Database("tradehub").Collection("listings")
@@ -95,6 +113,31 @@ func CreateListing(client *mongo.Client) fiber.Handler {
 			})
 		}
 
+		usersColl := client.Database("tradehub").Collection("users")
+		
+		_, _ = usersColl.UpdateOne(
+			context.TODO(),
+			bson.M{"_id": userId, "selling": bson.M{"$type": 10}},
+			bson.M{"$set": bson.M{"selling": bson.A{}}})
+
+		res, err := usersColl.UpdateOne(
+			context.TODO(),
+			bson.M{"_id": userId},
+			bson.M{"$addToSet": bson.M{"selling": newListing.ID}},
+		)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to attach listing to user",
+				"detail": err.Error(),
+			})
+		}
+
+		if res.MatchedCount == 0 {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"error": "user not found",
+			})
+		}
+		
 		return c.JSON(fiber.Map{
 			"message": "listing created successfully",
 			"listing": newListing,
