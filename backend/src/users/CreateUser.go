@@ -22,26 +22,29 @@ func CreateUser(client *mongo.Client) fiber.Handler {
 		var user Users
 		if err := c.Bind().Body(&user); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			  "error": "cannot parse JSON!",
+				"error": "cannot parse JSON!",
 			})
 		}
 
 		hash, _ := hashPassword(user.PasswordHash)
-		
+
 		user.ID = primitive.NewObjectID()
 		user.CreatedAt = time.Now()
 		user.PasswordHash = hash
-		
+		// Added now
+		user.Selling = []primitive.ObjectID{}
+		user.Purchases = []primitive.ObjectID{}
+
 		result, err := usersColelction.InsertOne(context.Background(), user)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			  "error": "failed to insert user",
+				"error": "failed to insert user",
 			})
 		}
-		
+
 		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-		  "insertedID": result.InsertedID,
-		  "user":       user,
-	  })
+			"insertedID": result.InsertedID,
+			"user":       user,
+		})
 	}
 }
