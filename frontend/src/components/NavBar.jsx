@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
+import { AuthContext } from "./AuthContext";
 import "../styles/NavBar.css";
+import { useContext } from "react";
 
 function NavBar() {
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
+  const { user, logout } = useContext(AuthContext);
 
   return (
     <nav className="navBar">
@@ -14,18 +17,7 @@ function NavBar() {
           Home
         </Link>
 
-        {!token && (
-          <>
-            <Link to="/login" className="nav-link">
-              Login
-            </Link>
-            <Link to="/registration" className="nav-link">
-              Registration
-            </Link>
-          </>
-        )}
-
-        {token && (
+        {user ? (
           <>
             <Link to="/edit" className="nav-link">
               Edit
@@ -34,15 +26,26 @@ function NavBar() {
               Create listing
             </Link>
             <Link
-              to="/"
               className="nav-link"
-              onClick={() => {
-                localStorage.removeItem("token");
-                localStorage.removeItem("id");
-                window.location.reload();
-              }}
+              onClick={logout}
+              // to="/"
+              // className="nav-link"
+              // onClick={() => {
+              //   localStorage.removeItem("token");
+              //   localStorage.removeItem("id");
+              //   window.location.reload();
+              // }}
             >
               Logout
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="nav-link">
+              Login
+            </Link>
+            <Link to="/registration" className="nav-link">
+              Registration
             </Link>
           </>
         )}

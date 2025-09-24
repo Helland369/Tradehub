@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../components/AuthContext";
 
 import "../styles/Login.css";
 
@@ -7,6 +8,8 @@ function Login() {
     userName: "",
     password: "",
   });
+
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setFormData({
@@ -37,6 +40,7 @@ function Login() {
 
       if (res.ok) {
         localStorage.setItem("token", data.token);
+        login(data.token);
         alert("Login successfully logged in!");
       } else {
         alert("Error: ", data.error);
