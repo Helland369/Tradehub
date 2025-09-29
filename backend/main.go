@@ -14,6 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
+	"github.com/Helland369/Tradehub/src"
 	"github.com/Helland369/Tradehub/src/users"
 )
 
@@ -79,7 +80,8 @@ func main() {
 
 	app.Post("/login_users", users.LoginUser(client))
 	app.Post("/create_users", users.CreateUser(client))
-
+	app.Get("/listings", src.GetListings(client))
+	
 	protected := app.Group("/api", jwtMiddleWare)
 
 	protected.Get("/profile", users.Profile(client))
