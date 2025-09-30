@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
+	"github.com/gofiber/fiber/v3/middleware/static"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
 	jwtware "github.com/saveblush/gofiber3-contrib/jwt"
@@ -78,6 +79,10 @@ func main() {
 		},
 	})
 
+	// directories to serve
+	app.Use("/uploads", static.New("./uploads"))
+
+	// end points
 	app.Post("/login_users", users.LoginUser(client))
 	app.Post("/create_users", users.CreateUser(client))
 	app.Get("/listings", src.GetListings(client))
