@@ -86,6 +86,7 @@ func main() {
 	app.Post("/login_users", users.LoginUser(client))
 	app.Post("/create_users", users.CreateUser(client))
 	app.Get("/listings", src.GetListings(client))
+	app.Get("/listings/:id", src.GetListingsById(client))
 	
 	protected := app.Group("/api", jwtMiddleWare)
 
