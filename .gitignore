@@ -145,3 +145,4 @@ vite.config.ts.timestamp-*
 
 # user uploaded images
 /backend/uploads
+
