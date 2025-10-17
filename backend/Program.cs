@@ -1,4 +1,8 @@
 using MongoDB.Driver;
+using Backend.Services;
+using DotNetEnv;
+
+Env.Load();
 
 var connectionString = Environment.GetEnvironmentVariable("MONGODB");
 if (connectionString == null) {
