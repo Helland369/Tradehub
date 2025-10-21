@@ -14,7 +14,7 @@ public class Address
     public string City { get; set; } = "";
 
     [BsonElement("country")]
-    [JsonPropertyName("coutry")]
+    [JsonPropertyName("country")]
     public string Country { get; set; } = "";
 
     [BsonElement("zip")]

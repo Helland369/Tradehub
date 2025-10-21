@@ -7,6 +7,9 @@ public class Bid
 {
     [BsonId]
     [BsonElement("_id")]
+    public ObjectId ID { get; set; }
+
+    [BsonElement("userId")]
     public ObjectId userID { get; set; }
 
     [BsonElement("amount")]
@@ -55,7 +58,7 @@ public class Listing
 
     [BsonElement("images")]
     [JsonPropertyName("images")]
-    public List<string> Images { get; set; }
+    public List<string> Images { get; set; } = new();
 
     [BsonElement("startingPrice")]
     [JsonPropertyName("startingPrice")]
@@ -99,7 +102,7 @@ public class Listing
     [BsonElement("status")]
     [BsonRepresentation(BsonType.String)]
     [JsonPropertyName("status")]
-    public ListingStatus status { get; set; } = ListingStatus.Active;
+    public ListingStatus Status { get; set; } = ListingStatus.Active;
 
     [BsonElement("watchers")]
     [JsonPropertyName("watchers")]
