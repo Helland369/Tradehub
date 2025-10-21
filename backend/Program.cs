@@ -1,11 +1,13 @@
-using MongoDB.Driver;
 using Backend.Services;
+using MongoDB.Driver;
 using DotNetEnv;
+using MongoDB.EntityFrameworkCore.Extensions;
 
 Env.Load();
 
 var connectionString = Environment.GetEnvironmentVariable("MONGODB");
-if (connectionString == null) {
+if (connectionString == null)
+{
     Console.WriteLine("You must set your 'MONGODB' env variable");
     Environment.Exit(0);
 }
@@ -17,9 +19,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
-var client = new MongoClient("mongodb://localhost:27017");
-var db = client.GetDatabase("tradehub");
-
+var client = new MongoClient(connectionString);
+var db = TradehubDbContext.Create(client.GetDatabase("tradehub"));
+    
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
