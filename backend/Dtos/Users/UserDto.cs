@@ -1,3 +1,4 @@
+namespace Backend.DTO.Users;
 
 public record UserDto(
     string ID,

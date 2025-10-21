@@ -1,3 +1,5 @@
+namespace Backend.DTO.Users;
+
 using System.ComponentModel.DataAnnotations;
 
 public record CreateUserRequest(
