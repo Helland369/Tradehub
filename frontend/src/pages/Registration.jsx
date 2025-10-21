@@ -44,7 +44,7 @@ function Registration() {
     };
 
     try {
-      const res = await fetch("http://localhost:4000/create_users", {
+      const res = await fetch("http://localhost:5225/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
