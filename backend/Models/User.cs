@@ -19,7 +19,7 @@ public class Address
 
     [BsonElement("zip")]
     [JsonPropertyName("zip")]
-    public int zip { get; set; }
+    public int Zip { get; set; }
 }
 
 public class User

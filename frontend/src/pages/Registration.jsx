@@ -35,25 +35,22 @@ function Registration() {
       address: {
         street: formData.street,
         city: formData.city,
-        zip: parseInt(formData.zip, 10),
+        zip: formData.zip,
         country: formData.country,
       },
       phone: formData.phone,
       password: formData.password,
-      role: formData.role,
+      role: formData.role || "user",
     };
 
     try {
-      const res = await fetch("http://localhost:5225/api/users", {
+      const res = await fetch("http://localhost:3000/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
       });
-
-      const data = await res.json();
-      console.log("Server response: ", data);
 
       if (res.ok) {
         alert("User created successfully!");
@@ -148,6 +145,7 @@ function Registration() {
         <label name="password">Password</label>
         <input
           name="password"
+          type="password"
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}

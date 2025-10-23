@@ -1,10 +1,14 @@
 namespace Backend.DTO.Users;
 
-using System.ComponentModel.DataAnnotations;
+using Backend.Models;
 
 public record CreateUserRequest(
-    [Required, MaxLength(80)] string Fname,
-    [Required, MaxLength(80)] string Lname,
-    [EmailAddress] string? Email,
-    [Required, MinLength(8)] string Password
-    );
+    string Fname,
+    string Lname,
+    string Email,
+    string UserName,
+    string Phone,
+    string Password,
+    Address Address,
+    string? Role
+);

@@ -1,6 +1,6 @@
 using Backend.Services;
-using MongoDB.Driver;
 using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.EntityFrameworkCore.Extensions;
 
 Env.Load();
@@ -14,20 +14,26 @@ if (connectionString == null)
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendDev", p =>
+        p.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
+builder.Services.AddDbContext<TradehubDbContext>(opt =>
+opt.UseMongoDB(connectionString, databaseName: "tradehub"));
+
+builder.Services.AddSingleton<PasswordHasher>();
 
 var app = builder.Build();
-var client = new MongoClient(connectionString);
-var db = TradehubDbContext.Create(client.GetDatabase("tradehub"));
-    
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
 
+app.UseCors("FrontendDev");
 app.UseHttpsRedirection();
-
+app.MapControllers();
 app.Run();
