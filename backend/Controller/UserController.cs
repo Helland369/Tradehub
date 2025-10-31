@@ -1,9 +1,10 @@
-namespace Backend.Controller;
+using Backend.DTO.Users;
 using Backend.Models;
 using Backend.Services;
-using Backend.DTO.Users;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+
+namespace Backend.Controller;
 
 [Route("/api/users")]
 [ApiController]
@@ -38,17 +39,17 @@ public class UserController : ControllerBase
 
         var user = new User
         {
-            ID = MongoDB.Bson.ObjectId.GenerateNewId(),
+            ID = ObjectId.GenerateNewId(),
             Fname = req.Fname,
             Lname = req.Lname,
             Email = req.Email,
             UserName = req.UserName,
             Address = new Address
             {
-                Street = req.Address?.Street ?? "",
-                City = req.Address?.City ?? "",
-                Zip = req.Address?.Zip ?? 0,
-                Country = req.Address?.Country ?? "",
+                Street = req.Address.Street,
+                City = req.Address.City ,
+                Zip = req.Address.Zip,
+                Country = req.Address.Country,
             },
             Phone = req.Phone,
             PasswordHash = _hasher.HashPassword(req.Password),

@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using System.Security.Claims;
 using Backend.Models;
 using Backend.Services;
@@ -8,7 +7,7 @@ using MongoDB.Bson;
 
 namespace Backend.Controller;
 
-[Route("/listing")]
+[Route("/api/create_listing")]
 [ApiController]
 public class CreateListingController : ControllerBase
 {
@@ -37,7 +36,7 @@ public class CreateListingController : ControllerBase
             Description = req.Description,
             Category = req.Category,
             Condition = req.Condition,
-            Images = req.Images ?? new(),
+            Images = req.Images,
             Status = req.Status,
             BuyPrice = req.BuyPrice,
             CurrentBid = req.CurrentBid,
@@ -48,12 +47,12 @@ public class CreateListingController : ControllerBase
             UpdatedAt = req.UpdatedAt,
             EndTime = req.EndTime,
             // need status...
-            Watchers = req.Watchers ?? new(),
+            Watchers = req.Watchers,
             Location = req.Location,
         };
 
-        _db.Listings.AddAsync(listing);
-        _db.SaveChangesAsync(ct);
+        await _db.Listings.AddAsync(listing);
+        await _db.SaveChangesAsync(ct);
         return Ok(listing);
     }
 }

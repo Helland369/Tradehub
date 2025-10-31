@@ -27,12 +27,16 @@ function Login() {
     };
 
     try {
-      const res = await fetch("http://localhost:4000/login_users", {
+      const res = await fetch("http://localhost:3000/api/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(body),
+        //body: JSON.stringify(body),
+        body: JSON.stringify({
+          userName: formData.userName,
+          password: formData.password,
+        }),
       });
 
       const data = await res.json();
@@ -43,10 +47,10 @@ function Login() {
         login(data.token);
         alert("Login successfully logged in!");
       } else {
-        alert("Error: ", data.error);
+        alert(`Error: ${data.error || res.status} ${res.statusText}`);
       }
     } catch (err) {
-      console.log("Ferch error: ", err);
+      console.log("Fetch error: ", err);
       alert("Something went wrong!");
     }
   };
@@ -66,6 +70,7 @@ function Login() {
           name="password"
           placeholder="Password"
           value={formData.password}
+          type="password"
           onChange={handleChange}
         />
         <button type="submit">Login</button>
