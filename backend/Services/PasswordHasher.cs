@@ -7,7 +7,7 @@ public class PasswordHasher
         return BCrypt.Net.BCrypt.EnhancedHashPassword(password, 16);
     }
 
-    public bool ChechPasswordHash(string password, string hashedPassword) {
+    public bool CheckPasswordHash(string password, string hashedPassword) {
         return BCrypt.Net.BCrypt.EnhancedVerify(password, hashedPassword);
     }
 }

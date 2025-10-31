@@ -62,7 +62,7 @@ function CreateListing() {
     }
 
     try {
-      const res = await fetch("http://localhost:4000/api/create_listing", {
+      const res = await fetch("http://localhost:3000/api/create_listing", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

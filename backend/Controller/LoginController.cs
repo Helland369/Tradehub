@@ -1,10 +1,9 @@
-namespace Backend.Controller;
-using Backend.Models;
-using Backend.Services;
 using Backend.DTO.Users;
+using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
+
+namespace Backend.Controller;
 
 [Route("/api/auth")]
 [ApiController]
@@ -21,20 +20,25 @@ public class LoginController : ControllerBase
         _config = config;
     }
 
-    [HttpPost("/login")]
-    public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginUserRequest req)
+    [HttpPost]
+    public async Task<IActionResult> Login([FromBody] LoginUserRequest req)
     {
-        //var filet = Builders<User>.Filter.Or(Builders<User>.Filter.Eq(u => u.UserName, req.UserName));
-
-        var user = await _db.FindAsync<User>(req.UserName);
-        if (user is null)
-            return Unauthorized(new { error = "Invalid credentials" });
-
-        var password = _hasher.ChechPasswordHash(req.Password, user.PasswordHash);
-        if (!password)
-            return Unauthorized(new { error = "Invalid credentials" });
-
-        var token = JwtTokenFactory.CreateToken(user, _config);
-        return token;
+        try
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.UserName == req.UserName);
+            if (user is null)
+                return Unauthorized(new { error = "Invalid credentials" });
+            
+            var password = _hasher.CheckPasswordHash(req.Password, user.PasswordHash);
+            if (!password)
+                return Unauthorized(new { error = "Invalid credentials" });
+            
+            var token = JwtTokenFactory.CreateToken(user, _config);
+            return Ok(new { token });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
     }
 }

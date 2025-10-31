@@ -1,12 +1,11 @@
-namespace Backend.Controller;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Backend.DTO.Users;
 using Backend.Models;
-using System.IdentityModel.Tokens;
-using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using DotNetEnv;
+
+namespace Backend.Controller;
 
 public static class JwtTokenFactory
 {
@@ -27,14 +26,14 @@ public static class JwtTokenFactory
         };
 
         if (!string.IsNullOrWhiteSpace(user.Role))
-            claims.Add(new Claim(type: ClaimTypes.Role, value: user.Role!));
+            claims.Add(new Claim(type: ClaimTypes.Role, value: user.Role));
 
         var expires = DateTime.UtcNow.AddHours(2);
 
         var token = new JwtSecurityToken
         (
         issuer: Environment.GetEnvironmentVariable("JWT_ISSUER"),
-        audience: Environment.GetEnvironmentVariable("JWT_AUDIANCE"),
+        audience: Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
         claims: claims,
         expires: expires,
         signingCredentials: credentials
