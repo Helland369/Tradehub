@@ -4,7 +4,7 @@ public class PasswordHasher
 {
     public string HashPassword(string password)
     {
-        return BCrypt.Net.BCrypt.EnhancedHashPassword(password, 16);
+        return BCrypt.Net.BCrypt.EnhancedHashPassword(password, 13);
     }
 
     public bool CheckPasswordHash(string password, string hashedPassword) {
