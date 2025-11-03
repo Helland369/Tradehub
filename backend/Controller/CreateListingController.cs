@@ -27,7 +27,7 @@ public class CreateListingController : ControllerBase
 
         if (string.IsNullOrWhiteSpace(claimsIdentity) || !ObjectId.TryParse(claimsIdentity, out var userId))
             return Unauthorized("Invalid or missing user id in token");
-        
+
         var listing = new Listing
         {
             ID = ObjectId.GenerateNewId(),
@@ -51,7 +51,7 @@ public class CreateListingController : ControllerBase
             Location = req.Location,
         };
 
-        await _db.Listings.AddAsync(listing);
+        await _db.Listings.AddAsync(listing, ct);
         await _db.SaveChangesAsync(ct);
         return Ok(listing);
     }
