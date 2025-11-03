@@ -58,7 +58,7 @@ public class Listing
 
     [BsonElement("images")]
     [JsonPropertyName("images")]
-    public List<string> Images { get; set; } = new();
+    public List<IFormFile?> Images { get; set; } = new();
 
     [BsonElement("startingPrice")]
     [JsonPropertyName("startingPrice")]
