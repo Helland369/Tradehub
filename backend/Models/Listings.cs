@@ -58,11 +58,11 @@ public class Listing
 
     [BsonElement("images")]
     [JsonPropertyName("images")]
-    public List<IFormFile?> Images { get; set; } = new();
+    public List<string?> Images { get; set; } = new();
 
     [BsonElement("startingPrice")]
     [JsonPropertyName("startingPrice")]
-    public double StartingPrice { get; set; }
+    public double? StartingPrice { get; set; }
 
     [BsonElement("buyPrice")]
     [JsonPropertyName("buyPrice")]
@@ -70,7 +70,7 @@ public class Listing
 
     [BsonElement("currentBid")]
     [JsonPropertyName("currentBid")]
-    public double CurrentBid { get; set; }
+    public double? CurrentBid { get; set; }
 
     [BsonElement("sellerId")]
     [JsonPropertyName("sellerId")]

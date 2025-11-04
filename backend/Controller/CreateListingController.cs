@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using backend.Dtos;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -23,9 +24,10 @@ public class CreateListingController : ControllerBase
     [HttpPost]
     [Authorize]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
-    public async Task<ActionResult<IEnumerable<Listing>>> Listing([FromForm]Listing req, CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<Listing>>> Listing([FromForm]CreateListingRequest req, CancellationToken ct)
     {
-        var claimsIdentity = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var claimsIdentity = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? User.FindFirst("sub")?.Value;
         if (string.IsNullOrWhiteSpace(claimsIdentity) || !ObjectId.TryParse(claimsIdentity, out var userId))
             return Unauthorized("Invalid or missing user id in token");
 
@@ -33,7 +35,7 @@ public class CreateListingController : ControllerBase
         var targetDirectory = Path.Combine(webRoot, "uploads", "listings");
         Directory.CreateDirectory(targetDirectory);
         
-        var savedImageUrls = new List<string>();
+        var savedImageUrls = new List<string?>();
         if (req.Images.Count > 0)
         {
             foreach (var image in req.Images)
@@ -66,13 +68,13 @@ public class CreateListingController : ControllerBase
             Description = req.Description,
             Category = req.Category,
             Condition = req.Condition,
-            Images = req.Images,
-            Status = req.Status,
+            Images = savedImageUrls,
+            Status = ListingStatus.Active,
             BuyPrice = req.BuyPrice,
-            CurrentBid = req.CurrentBid,
-            SellerID = req.SellerID,
+            CurrentBid = req.BuyPrice,
+            SellerID = userId,
             Bids = new List<Bid>(),
-            IsAuction = req.IsAuction || true,
+            IsAuction = req.IsAuction,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             EndTime = req.EndTime,

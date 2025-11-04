@@ -32,7 +32,6 @@ function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        //body: JSON.stringify(body),
         body: JSON.stringify({
           userName: formData.userName,
           password: formData.password,

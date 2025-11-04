@@ -71,7 +71,6 @@ function CreateListing() {
       });
 
       const data = await res.json();
-      console.log("Server response: ", data);
 
       if (res.ok) {
         setMessage("Listing created succsessfully!");
