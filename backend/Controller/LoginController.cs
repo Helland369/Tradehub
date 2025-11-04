@@ -34,7 +34,7 @@ public class LoginController : ControllerBase
                 return Unauthorized(new { error = "Invalid credentials" });
             
             var token = JwtTokenFactory.CreateToken(user, _config);
-            return Ok(new { token });
+            return Ok(token);
         }
         catch (Exception ex)
         {

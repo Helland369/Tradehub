@@ -19,8 +19,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer",options =>
     {
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
@@ -28,6 +29,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidateAudience = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
             ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
@@ -37,11 +39,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("FrontendDev", p =>
+    options.AddPolicy(name: "FrontendDev", p =>
         p.WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials());
+            .AllowAnyMethod());
+    //.AllowCredentials());
 });
 
 builder.Services.AddDbContext<TradehubDbContext>(opt =>
@@ -51,9 +53,10 @@ builder.Services.AddSingleton<PasswordHasher>();
 
 var app = builder.Build();
 
+app.UseCors("FrontendDev");
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("FrontendDev");
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
