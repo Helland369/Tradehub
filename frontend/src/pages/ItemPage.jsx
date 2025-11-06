@@ -7,23 +7,38 @@ function ItemPage() {
 
   useEffect(() => {
     async function fetchItem() {
-      const res = await fetch(`http://localhost:4000/listings/${id}`);
+      const res = await fetch(`http://localhost:3000/api/listings/${id}`);
+      if (!res.ok) {
+        const msg = await res.text();
+        throw new Error(msg || `HTTP ${res.status}`);
+      }
       const data = await res.json();
       setItem(data);
     }
-    fetchItem();
+    fetchItem().catch((err) => {
+      console.error("failed to load item:", err);
+    });
   }, [id]);
 
   if (!item) return <p>Loading...</p>;
 
+  const renderImage = () => {
+    const imgs = Array.isArray(item.images)
+      ? item.images
+      : [item.images].filter(Boolean);
+    return imgs.map((img, i) => {
+      const src =
+        typeof img === "string"
+          ? `http://localhost:3000/${img.replace(/^uploads\//, "uploads/listings/")}`
+          : undefined;
+      return <img key={i} src={src} alt={item.title} />;
+    });
+  };
+
   return (
     <div>
       <h1>{item.title}</h1>
-      <div>
-        {item.images.map((img, i) => {
-          <img key={i} src={`http://localhost:4000/${img}`} alt="item" />;
-        })}
-      </div>
+      <div>{renderImage()}</div>
       <p>{item.description}</p>
       <p>Price: {item.buyPrice}</p>
       <button>Buy</button>

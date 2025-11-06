@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.FileProviders;
 
 Env.Load();
 
@@ -19,7 +20,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer",options =>
     {
@@ -43,7 +43,6 @@ builder.Services.AddCors(options =>
         p.WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
             .AllowAnyMethod());
-    //.AllowCredentials());
 });
 
 builder.Services.AddDbContext<TradehubDbContext>(opt =>
