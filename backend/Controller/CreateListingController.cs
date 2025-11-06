@@ -62,8 +62,8 @@ public class CreateListingController : ControllerBase
         
         var listing = new Listing
         {
-            ID = ObjectId.GenerateNewId(),
-            UserID = userId,
+            ID = ObjectId.GenerateNewId().ToString(),
+            UserID = userId.ToString(),
             Title = req.Title,
             Description = req.Description,
             Category = req.Category,

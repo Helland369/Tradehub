@@ -34,11 +34,13 @@ public class Listing
 {
     [BsonId]
     [BsonElement("_id")]
-    public ObjectId ID { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string ID { get; set; } = string.Empty;
 
     [BsonElement("userId")]
     [JsonPropertyName("userId")]
-    public ObjectId UserID { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string UserID { get; set; } = string.Empty;
 
     [BsonElement("title")]
     [JsonPropertyName("title")]
