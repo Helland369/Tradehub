@@ -47,7 +47,7 @@ public class EditUserController : ControllerBase
             if (!string.IsNullOrWhiteSpace(req.Address.Street)) user.Address.Street = req.Address.Street;
             if (!string.IsNullOrWhiteSpace(req.Address.City)) user.Address.City = req.Address.City;
             if (!string.IsNullOrWhiteSpace(req.Address.Country)) user.Address.Country = req.Address.Country;
-            if (req.Address.Zip != null) user.Address.Zip = req.Address.Zip;
+            if (req.Address.Zip.HasValue) user.Address.Zip = req.Address.Zip.Value;
         }
 
         await _db.SaveChangesAsync(ct);
