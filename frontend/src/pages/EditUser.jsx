@@ -51,12 +51,6 @@ function EditUser() {
         };
       })(),
     };
-    // address: {
-    //   street: formData.street,
-    //   city: formData.city,
-    //   zip: formData.zip,
-    //   country: formData.country,
-    // },
 
     try {
       const res = await fetch("http://localhost:3000/api/edituser", {
