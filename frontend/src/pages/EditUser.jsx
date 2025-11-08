@@ -32,14 +32,40 @@ function EditUser() {
   async function handleSubmit(e) {
     e.preventDefault();
 
+    const payload = {
+      fname: formData.fname || undefined,
+      lname: formData.lname || undefined,
+      email: formData.email || undefined,
+      userName: formData.userName || undefined,
+      phone: formData.phone || undefined,
+      password: formData.password || undefined,
+      address: (() => {
+        const hasAny =
+          formData.street || formData.city || formData.country || formData.zip;
+        if (!hasAny) return undefined;
+        return {
+          street: formData.street || undefined,
+          city: formData.city || undefined,
+          country: formData.country || undefined,
+          zip: formData.zip ? Number(formData.zip) : undefined,
+        };
+      })(),
+    };
+    // address: {
+    //   street: formData.street,
+    //   city: formData.city,
+    //   zip: formData.zip,
+    //   country: formData.country,
+    // },
+
     try {
-      const res = await fetch("http://localhost:4000/api/edit_user", {
-        method: "POST",
+      const res = await fetch("http://localhost:3000/api/edituser", {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
