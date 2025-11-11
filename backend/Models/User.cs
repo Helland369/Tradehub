@@ -51,7 +51,11 @@ public class User
     [BsonElement("phone")]
     [JsonPropertyName("phone")]
     public string Phone { get; set; } = "";
-
+    
+    [BsonElement("points")]
+    [JsonPropertyName("points")]
+    public int Points { get; set; } = 0;
+    
     // we dont send password to client
     [BsonElement("passwordHash")]
     [JsonIgnore]
@@ -65,6 +69,10 @@ public class User
     [JsonPropertyName("purchases")]
     public List<ObjectId> Purchases { get; set; } = new();
 
+    [BsonElement("cart")]
+    [JsonPropertyName("cart")]
+    public List<ObjectId> Cart { get; set; } = new();
+    
     [BsonElement("createdAt")]
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     [JsonPropertyName("createdAt")]
