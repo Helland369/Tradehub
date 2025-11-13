@@ -25,17 +25,10 @@ function NavBar() {
             <Link to="/createListing" className="nav-link">
               Create listing
             </Link>
-            <Link
-              className="nav-link"
-              onClick={logout}
-              // to="/"
-              // className="nav-link"
-              // onClick={() => {
-              //   localStorage.removeItem("token");
-              //   localStorage.removeItem("id");
-              //   window.location.reload();
-              // }}
-            >
+            <Link to="/addCurrency" className="nav-link">
+              Add currency
+            </Link>
+            <Link className="nav-link" onClick={logout}>
               Logout
             </Link>
           </>
