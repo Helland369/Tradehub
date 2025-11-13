@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Backend.Models;
+using Backend.DTO.Users;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,7 @@ public class AddCurrencyController : ControllerBase
     
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> AddCurrency([FromForm]int amount, CancellationToken ct)
+    public async Task<IActionResult> AddCurrency([FromBody]AddCurrencyRequest req, CancellationToken ct)
     {
         var claimsIdentity = User.FindFirstValue(ClaimTypes.NameIdentifier)
             ?? User.FindFirst("sub")?.Value;
@@ -31,8 +31,12 @@ public class AddCurrencyController : ControllerBase
         if (user == null)
             return NotFound("user not found");
         
-        user.Points += amount;
+        user.Points += req.amount;
         await _db.SaveChangesAsync(ct);
-        return Ok();
+        return Ok(new
+        {
+            message = "Successfully added currency",
+            points = user.Points,
+        });
     }
 }
