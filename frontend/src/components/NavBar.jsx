@@ -31,6 +31,9 @@ function NavBar() {
             <Link className="nav-link" onClick={logout}>
               Logout
             </Link>
+            <Link to="/cart" className="nav-link">
+              Shopping Cart
+            </Link>
           </>
         ) : (
           <>
