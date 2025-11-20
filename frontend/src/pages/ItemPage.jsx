@@ -50,7 +50,10 @@ function ItemPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(item.id),
+        body: JSON.stringify({
+          itemId: item.id,
+          quatity: 1,
+        }),
       });
 
       let data = null;
