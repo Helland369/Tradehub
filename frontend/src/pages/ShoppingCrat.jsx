@@ -52,9 +52,7 @@ function ShoppingCart() {
         return;
       }
 
-      setItems((prev) =>
-        prev.filter((item) => item.id !== itemId && item.ID !== itemId),
-      );
+      setItems((prev) => prev.filter((item) => item.id !== itemId));
     } catch (err) {
       console.log(err);
       setMessage("Something went wrong when removing the item!");
@@ -76,11 +74,11 @@ function ShoppingCart() {
       ) : (
         <ul className="shopping-cart-items">
           {items.map((item) => {
-            const id = item.id || item.ID;
+            const id = item.id;
             return (
               <li key={id} className="shopping-cart-item">
                 <span className="item-title">
-                  {item.title || item.name || "Untitled item"}
+                  {item.title || "Untitled item"}
                 </span>
                 {item.buyPrice && (
                   <span className="item-price">{item.buyPrice} points</span>
