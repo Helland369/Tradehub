@@ -7,6 +7,7 @@ import EditUser from "./pages/EditUser";
 import CreateListing from "./pages/CreateListing";
 import ItemPage from "./pages/ItemPage";
 import AddCurrency from "./pages/AddCurrency";
+import ShoppingCart from "./pages/ShoppingCrat";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="createListing" element={<CreateListing />} />
           <Route path="/item/:id" element={<ItemPage />} />
           <Route path="/addCurrency" element={<AddCurrency />}></Route>
+          <Route path="/cart" element={<ShoppingCart />} />
         </Routes>
       </main>
     </div>
