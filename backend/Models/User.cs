@@ -22,6 +22,17 @@ public class Address
     public int Zip { get; set; }
 }
 
+public class CartItems
+{
+    [BsonElement("listingId")]
+    [JsonPropertyName("listingId")] 
+    public ObjectId ListingID { get; set; }
+    
+    [BsonElement("quantity")]
+    [JsonPropertyName("quantity")]
+    public int Quantity { get; set; } = 0;
+}
+
 public class User
 {
     [BsonId]
@@ -71,7 +82,7 @@ public class User
 
     [BsonElement("cart")]
     [JsonPropertyName("cart")]
-    public List<ObjectId> Cart { get; set; } = new();
+    public List<CartItems> Cart { get; set; } = new();
     
     [BsonElement("createdAt")]
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
