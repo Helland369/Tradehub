@@ -33,7 +33,7 @@ function ShoppingCart() {
     }
   }
 
-  async function handleRemove(itemId) {
+  async function handleRemove(item) {
     try {
       const res = await fetch("http://localhost:3000/api/remove_from_cart", {
         method: "DELETE",
@@ -41,7 +41,10 @@ function ShoppingCart() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(itemId),
+        body: JSON.stringify({
+          itemId: item.id,
+          quantity: 1,
+        }),
       });
 
       if (!res.ok) {
