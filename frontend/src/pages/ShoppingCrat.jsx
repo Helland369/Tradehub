@@ -33,7 +33,7 @@ function ShoppingCart() {
     }
   }
 
-  async function handleRemove(item) {
+  async function handleRemove(id) {
     try {
       const res = await fetch("http://localhost:3000/api/remove_from_cart", {
         method: "DELETE",
@@ -42,7 +42,7 @@ function ShoppingCart() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          itemId: item.id,
+          itemId: id,
           quantity: 1,
         }),
       });
@@ -55,7 +55,7 @@ function ShoppingCart() {
         return;
       }
 
-      setItems((prev) => prev.filter((item) => item.id !== itemId));
+      setItems((prev) => prev.filter((item) => item.id !== id));
     } catch (err) {
       console.log(err);
       setMessage("Something went wrong when removing the item!");
@@ -85,6 +85,11 @@ function ShoppingCart() {
                 </span>
                 {item.buyPrice && (
                   <span className="item-price">{item.buyPrice} points</span>
+                )}
+                {item.quantity && (
+                  <span className="item-quantity">
+                    {item.quantity} quantity
+                  </span>
                 )}
                 <button
                   className="remove-button"
