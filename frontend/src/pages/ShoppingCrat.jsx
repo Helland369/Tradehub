@@ -55,7 +55,7 @@ function ShoppingCart() {
         return;
       }
 
-      setItems((prev) => prev.filter((item) => item.id !== id));
+      await fetchItems();
     } catch (err) {
       console.log(err);
       setMessage("Something went wrong when removing the item!");
