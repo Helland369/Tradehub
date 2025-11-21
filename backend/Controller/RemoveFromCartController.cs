@@ -42,11 +42,11 @@ public class RemoveFromCartController : ControllerBase
 
         if (cartItem.Quantity > removeQty)
         {
-            user.Cart.Remove(cartItem);
+            cartItem.Quantity -= removeQty;
         }
         else
         {
-            cartItem.Quantity -= removeQty;
+            user.Cart.Remove(cartItem);
         }
         
         await _db.SaveChangesAsync(ct);
