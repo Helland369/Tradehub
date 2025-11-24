@@ -30,15 +30,23 @@ public class BuyShoppingCartController : ControllerBase
         if (user == null)
             return NotFound("user not found");
 
-        var listingIds = user.Cart.Select(c => c.ListingID).ToList();
-        var listings = _db.Listings.Where(l => listingIds.Contains(ObjectId.Parse(l.ID))).ToList();
+        var listingIdstr = user.Cart.Select(c => c.ListingID.ToString()).ToList();
+        var listings = _db.Listings.Where(l => listingIdstr.Contains(l.ID)).ToList();
+
+        var listingsDict = listings.ToDictionary(l => l.ID, l => l);
 
         double totPrice = 0;
+
         foreach (var c in user.Cart)
         {
-            var listing = _db.Listings.FirstOrDefault(l => l.ID == c.ListingID.ToString());
-            if (listing?.BuyPrice == null) continue;
-            totPrice += (double)listing.BuyPrice * c.Quantity;
+            var idStr = c.ListingID.ToString();
+            if (!listingsDict.TryGetValue(idStr, out var listing))
+                continue;
+
+            if (listing.BuyPrice == null)
+                continue;
+
+            totPrice += listing.BuyPrice.Value * c.Quantity;
         }
 
         if (totPrice > user.Points)
