@@ -1,10 +1,8 @@
 using Backend.Services;
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.Extensions.FileProviders;
 
 Env.Load();
 
