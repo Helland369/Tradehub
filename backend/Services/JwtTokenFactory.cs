@@ -5,7 +5,7 @@ using Backend.DTO.Users;
 using Backend.Models;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Backend.Controller;
+namespace Backend.Services;
 
 public static class JwtTokenFactory
 {
