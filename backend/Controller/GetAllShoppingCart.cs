@@ -1,10 +1,8 @@
-using System.Security.Claims;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
 
 namespace Backend.Controller;
 
@@ -13,20 +11,20 @@ namespace Backend.Controller;
 public class GetAllShoppingCart : ControllerBase
 {
     private readonly TradehubDbContext _db;
-    
-    public GetAllShoppingCart(TradehubDbContext db)
+    private readonly ICurrentUserService _uservice;
+
+    public GetAllShoppingCart(TradehubDbContext db, ICurrentUserService uservice)
     {
         _db = db;
+        _uservice = uservice;
     }
     
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> GetAll()
     {
-        var claimsIdentity = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? User.FindFirst("sub")?.Value;
-        if (string.IsNullOrWhiteSpace(claimsIdentity) || !ObjectId.TryParse(claimsIdentity, out var userId))
-            return BadRequest("Invalid user id");
+        if (!_uservice.TryGetUserId(out var userId))
+            return Unauthorized("Ivalid or missing user id in token");
 
         var user = await _db.Users.FirstOrDefaultAsync(u => u.ID == userId);
         if (user == null)

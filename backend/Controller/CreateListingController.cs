@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using backend.Dtos;
 using Backend.Models;
 using Backend.Services;
@@ -14,11 +13,13 @@ public class CreateListingController : ControllerBase
 {
     private readonly TradehubDbContext _db;
     private readonly IWebHostEnvironment _env;
-    
-    public CreateListingController(TradehubDbContext db, IWebHostEnvironment env)
+    private readonly ICurrentUserService _uservice;
+
+    public CreateListingController(TradehubDbContext db, IWebHostEnvironment env, ICurrentUserService uservice)
     {
         _db = db;
         _env = env;
+        _uservice = uservice;
     }
     
     [HttpPost]
@@ -26,9 +27,7 @@ public class CreateListingController : ControllerBase
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     public async Task<ActionResult<IEnumerable<Listing>>> Listing([FromForm]CreateListingRequest req, CancellationToken ct)
     {
-        var claimsIdentity = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? User.FindFirst("sub")?.Value;
-        if (string.IsNullOrWhiteSpace(claimsIdentity) || !ObjectId.TryParse(claimsIdentity, out var userId))
+        if (!_uservice.TryGetUserId(out var userId))
             return Unauthorized("Invalid or missing user id in token");
 
         var webRoot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");

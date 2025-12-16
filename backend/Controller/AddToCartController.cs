@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Backend.DTO.Users;
 using Backend.Models;
 using Backend.Services;
@@ -13,21 +12,21 @@ namespace Backend.Controller;
 public class AddToCartController : ControllerBase
 {
     private readonly TradehubDbContext _db;
-    
-    public AddToCartController(TradehubDbContext db)
+    private readonly ICurrentUserService _uservice;
+
+    public AddToCartController(TradehubDbContext db, ICurrentUserService uservice)
     {
         _db = db;
+        _uservice = uservice;
     }
 
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> AddToCart([FromBody] AddToCart dto, CancellationToken ct)
     {
-        var claimsIdentity = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? User.FindFirst("sub")?.Value;
-        if (string.IsNullOrWhiteSpace(claimsIdentity) || !ObjectId.TryParse(claimsIdentity, out var userId))
-            return Unauthorized("Invalid user id");
-        
+        if (!_uservice.TryGetUserId(out var userId))
+            return Unauthorized("Invalid or missing user id in token");
+
         if (!ObjectId.TryParse(dto.ItemId, out var itemId))
             return BadRequest("Invalid item id");
         
