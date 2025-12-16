@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Backend.DTO.Users;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -12,20 +11,20 @@ namespace Backend.Controller;
 public class RemoveFromCartController : ControllerBase
 {
     private readonly TradehubDbContext _db;
+    private readonly ICurrentUserService _uservice;
 
-    public RemoveFromCartController(TradehubDbContext db)
+    public RemoveFromCartController(TradehubDbContext db, ICurrentUserService uservice)
     {
         _db = db;
+        _uservice = uservice;
     }
     
     [HttpDelete]
     [Authorize]
     public async Task<IActionResult> RemoveFromCart([FromBody] RemoveFromCart dto, CancellationToken ct)
     {
-        var claimsIdentity = User.FindFirstValue(ClaimTypes.NameIdentifier) 
-            ?? User.FindFirst("sub")?.Value;
-        if (string.IsNullOrWhiteSpace(claimsIdentity) || !ObjectId.TryParse(claimsIdentity, out var userId))
-            return Unauthorized("Invalid user id");
+        if (!_uservice.TryGetUserId(out var userId))
+            return Unauthorized("Invalid or missing user id in token");
 
         if (!ObjectId.TryParse(dto.ItemId, out var itmeId))
             return BadRequest("Invalid item id");

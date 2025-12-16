@@ -1,9 +1,7 @@
-using System.Security.Claims;
 using Backend.DTO.Users;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 
 namespace Backend.Controller;
 
@@ -12,20 +10,20 @@ namespace Backend.Controller;
 public class AddCurrencyController : ControllerBase
 {
     private readonly TradehubDbContext _db;
-    
-    public AddCurrencyController(TradehubDbContext db)
+    private readonly ICurrentUserService _uservice;
+
+    public AddCurrencyController(TradehubDbContext db, ICurrentUserService uservice)
     {
         _db = db;
+        _uservice = uservice;
     }
     
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> AddCurrency([FromBody]AddCurrencyRequest req, CancellationToken ct)
     {
-        var claimsIdentity = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? User.FindFirst("sub")?.Value;
-        if (string.IsNullOrWhiteSpace(claimsIdentity) || !ObjectId.TryParse(claimsIdentity, out var userId))
-            return Unauthorized("Invalid or missing user id");
+        if (!_uservice.TryGetUserId(out var userId))
+            return Unauthorized("Invalid or missing user id in token");
 
         var user = _db.Users.FirstOrDefault(u => u.ID == userId);
         if (user == null)

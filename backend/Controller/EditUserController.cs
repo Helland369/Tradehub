@@ -1,11 +1,9 @@
-using System.Security.Claims;
 using Backend.DTO.Users;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Bson;
 
 namespace Backend.Controller;
 
@@ -16,21 +14,21 @@ public class EditUserController : ControllerBase
 {
     private readonly TradehubDbContext  _db;
     private readonly PasswordHasher _hasher;
-    
-    public EditUserController(TradehubDbContext db, PasswordHasher hasher)
+    private readonly ICurrentUserService _uservice;
+
+    public EditUserController(TradehubDbContext db, PasswordHasher hasher, ICurrentUserService uservice)
     {
         _db = db;
         _hasher = hasher;
+        _uservice = uservice;
     }
     
     [HttpPatch]
     public async Task<IActionResult> EditUser([FromBody]EditUser req, CancellationToken ct)
-    {
-        var claimsIdentity = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? User.FindFirst("sub")?.Value;
-        if (string.IsNullOrWhiteSpace(claimsIdentity) || !ObjectId.TryParse(claimsIdentity, out var userId))
+    {        
+        if (!_uservice.TryGetUserId(out var userId))
             return Unauthorized("Invalid or missing user id in token");
-            
+
         var user = await _db.Users.FirstOrDefaultAsync(u => u.ID == userId, ct);
         if (user == null) return NotFound("User not found");
         
