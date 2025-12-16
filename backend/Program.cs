@@ -48,6 +48,9 @@ opt.UseMongoDB(connectionString, databaseName: "tradehub"));
 
 builder.Services.AddSingleton<PasswordHasher>();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 var app = builder.Build();
 
 app.UseCors("FrontendDev");
