@@ -9,7 +9,7 @@ namespace Backend.Controller;
 public class GetListingsController : ControllerBase
 {
     private readonly TradehubDbContext _db;
-    
+
     public GetListingsController(TradehubDbContext db)
     {
         _db = db;
@@ -18,15 +18,33 @@ public class GetListingsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetListings()
     {
-        var listing = await _db.Listings.ToListAsync();
-        
-        return Ok(listing);
+        try
+        {
+            var listing = await _db.Listings.ToListAsync();
+
+            return Ok(listing);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return BadRequest();
+        }
     }
-    
+
     [HttpGet("{id}")]
-    public async  Task<IActionResult> GetListingsById(string id)
+    public async Task<IActionResult> GetListingsById(string id)
     {
-        var listing = await _db.Listings.FindAsync(id);
-        return Ok(listing);
+        try
+        {
+            var listing = await _db.Listings.FindAsync(id);
+            return Ok(listing);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return BadRequest();
+        }
     }
 }
