@@ -21,68 +21,77 @@ public class CreateListingController : ControllerBase
         _env = env;
         _uservice = uservice;
     }
-    
+
     [HttpPost]
     [Authorize]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
-    public async Task<ActionResult<IEnumerable<Listing>>> Listing([FromForm]CreateListingRequest req, CancellationToken ct)
+    public async Task<ActionResult<IEnumerable<Listing>>> Listing([FromForm] CreateListingRequest req, CancellationToken ct)
     {
-        if (!_uservice.TryGetUserId(out var userId))
-            return Unauthorized("Invalid or missing user id in token");
-
-        var webRoot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-        var targetDirectory = Path.Combine(webRoot, "uploads", "listings");
-        Directory.CreateDirectory(targetDirectory);
-        
-        var savedImageUrls = new List<string?>();
-        if (req.Images.Count > 0)
+        try
         {
-            foreach (var image in req.Images)
+            if (!_uservice.TryGetUserId(out var userId))
+                return Unauthorized("Invalid or missing user id in token");
+
+            var webRoot = _env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var targetDirectory = Path.Combine(webRoot, "uploads", "listings");
+            _ = Directory.CreateDirectory(targetDirectory);
+
+            var savedImageUrls = new List<string?>();
+            if (req.Images.Count > 0)
             {
-                if (image.Length <= 0) continue;
-                
-                var extension = Path.GetExtension(image.FileName);
-                var allowed = new[] {".jpg", ".jpeg", ".png", ".webp", ".gif"};
-                if (!allowed.Contains(extension, StringComparer.OrdinalIgnoreCase))
-                    return BadRequest("Invalid image extension");
-
-                var fileName = $"{ObjectId.GenerateNewId()}{extension}";
-                var filePath = Path.Combine(targetDirectory, fileName);
-
-                await using (var stream = new FileStream(filePath, FileMode.Create))
+                foreach (var image in req.Images)
                 {
-                    await image.CopyToAsync(stream, ct);
-                }
-                
-                var relativeFilePath = Path.Combine("uploads", fileName);
-                savedImageUrls.Add(relativeFilePath);
-            }
-        }
-        
-        var listing = new Listing
-        {
-            ID = ObjectId.GenerateNewId().ToString(),
-            UserID = userId.ToString(),
-            Title = req.Title,
-            Description = req.Description,
-            Category = req.Category,
-            Condition = req.Condition,
-            Images = savedImageUrls,
-            Status = ListingStatus.Active,
-            BuyPrice = req.BuyPrice,
-            CurrentBid = req.BuyPrice,
-            SellerID = userId,
-            Bids = new List<Bid>(),
-            IsAuction = req.IsAuction,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            EndTime = req.EndTime,
-            Watchers = new List<ObjectId>(),
-            Location = req.Location,
-        };
+                    if (image.Length <= 0) continue;
 
-        await _db.Listings.AddAsync(listing, ct);
-        await _db.SaveChangesAsync(ct);
-        return Ok(listing);
+                    var extension = Path.GetExtension(image.FileName);
+                    var allowed = new[] { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+                    if (!allowed.Contains(extension, StringComparer.OrdinalIgnoreCase))
+                        return BadRequest("Invalid image extension");
+
+                    var fileName = $"{ObjectId.GenerateNewId()}{extension}";
+                    var filePath = Path.Combine(targetDirectory, fileName);
+
+                    await using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream, ct);
+                    }
+
+                    var relativeFilePath = Path.Combine("uploads", fileName);
+                    savedImageUrls.Add(relativeFilePath);
+                }
+            }
+
+            var listing = new Listing
+            {
+                ID = ObjectId.GenerateNewId().ToString(),
+                UserID = userId.ToString(),
+                Title = req.Title,
+                Description = req.Description,
+                Category = req.Category,
+                Condition = req.Condition,
+                Images = savedImageUrls,
+                Status = ListingStatus.Active,
+                BuyPrice = req.BuyPrice,
+                CurrentBid = req.BuyPrice,
+                SellerID = userId,
+                Bids = new List<Bid>(),
+                IsAuction = req.IsAuction,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                EndTime = req.EndTime,
+                Watchers = new List<ObjectId>(),
+                Location = req.Location,
+            };
+
+            _ = await _db.Listings.AddAsync(listing, ct);
+            _ = await _db.SaveChangesAsync(ct);
+            return Ok(listing);
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return BadRequest();
+        }
     }
 }
