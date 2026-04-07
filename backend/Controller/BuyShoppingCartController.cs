@@ -21,47 +21,56 @@ public class BuyShoppingCartController : ControllerBase
     [Authorize]
     public async Task<IActionResult> BuyShoppingCart(CancellationToken ct)
     {
-        if (_uservice.TryGetUserId(out var userId))
-            return Unauthorized("Invalid or missing user id in token");
-
-        var user = _db.Users.FirstOrDefault(u => u.ID == userId);
-        if (user == null)
-            return NotFound("user not found");
-
-        var listingIdstr = user.Cart.Select(c => c.ListingID.ToString()).ToList();
-        var listings = _db.Listings.Where(l => listingIdstr.Contains(l.ID)).ToList();
-
-        var listingsDict = listings.ToDictionary(l => l.ID, l => l);
-
-        double totPrice = 0;
-
-        foreach (var c in user.Cart)
+        try
         {
-            var idStr = c.ListingID.ToString();
-            if (!listingsDict.TryGetValue(idStr, out var listing))
-                continue;
+            if (!_uservice.TryGetUserId(out var userId))
+                return Unauthorized("Invalid or missing user id in token");
 
-            if (listing.BuyPrice == null)
-                continue;
+            var user = _db.Users.FirstOrDefault(u => u.ID == userId);
+            if (user == null)
+                return NotFound("user not found");
 
-            totPrice += listing.BuyPrice.Value * c.Quantity;
+            var listingIdstr = user.Cart.Select(c => c.ListingID.ToString()).ToList();
+            var listings = _db.Listings.Where(l => listingIdstr.Contains(l.ID)).ToList();
+
+            var listingsDict = listings.ToDictionary(l => l.ID, l => l);
+
+            double totPrice = 0;
+
+            foreach (var c in user.Cart)
+            {
+                var idStr = c.ListingID.ToString();
+                if (!listingsDict.TryGetValue(idStr, out var listing))
+                    continue;
+
+                if (listing.BuyPrice == null)
+                    continue;
+
+                totPrice += listing.BuyPrice.Value * c.Quantity;
+            }
+
+            if (totPrice > user.Points)
+                return BadRequest("Insufficient funds in wallet!");
+
+            user.Points -= (int)totPrice;
+
+            foreach (var c in user.Cart)
+                user.Purchases.Add(c.ListingID);
+
+            user.Cart.Clear();
+
+            _ = await _db.SaveChangesAsync(ct);
+
+            return Ok(new
+            {
+                message = $"Purchuce complete! Total spent {totPrice} points."
+            });
+
         }
-
-        if (totPrice > user.Points)
-            return BadRequest("Insufficient funds in wallet!");
-
-        user.Points -= (int)totPrice;
-
-        foreach (var c in user.Cart)
-            user.Purchases.Add(c.ListingID);
-
-        user.Cart.Clear();
-
-        await _db.SaveChangesAsync(ct);
-
-        return Ok(new
+        catch (Exception ex)
         {
-            message = $"Purchuce complete! Total spent {totPrice} points."
-        });
+            Console.WriteLine(ex);
+            return BadRequest();
+        }
     }
 }
