@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom";
 
 function ItemCard({ item }) {
-  const img = Array.isArray(item.images) ? item.images[0] : item.images;
-  const src =
-    typeof img === "string"
-      ? `http://localhost:3000/${img.replace(/^uploads\//, "uploads/listings/")}`
-      : undefined;
+  const imgPath = Array.isArray(item.images) ? item.images[0] : item.images;
+
+  const baseUrl = "http://localhost:3000";
+
+  const formatedPath = imgPath?.startsWith("uploads/listings/")
+    ? imgPath
+    : imgPath?.replace("uploads/", "uploads/listings/");
+
+  const src = imgPath ? `${baseUrl}${formatedPath}` : undefined;
 
   return (
     <div className="itemCard">
