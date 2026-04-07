@@ -24,32 +24,40 @@ public class AddToCartController : ControllerBase
     [Authorize]
     public async Task<IActionResult> AddToCart([FromBody] AddToCart dto, CancellationToken ct)
     {
-        if (!_uservice.TryGetUserId(out var userId))
-            return Unauthorized("Invalid or missing user id in token");
+        try
+        {
+            if (!_uservice.TryGetUserId(out var userId))
+                return Unauthorized("Invalid or missing user id in token");
 
-        if (!ObjectId.TryParse(dto.ItemId, out var itemId))
-            return BadRequest("Invalid item id");
-        
-        var user = _db.Users.FirstOrDefault(u => u.ID == userId);
-        if (user == null)
-            return NotFound("User not found");
-        
-        var existiing = user.Cart.FirstOrDefault(u => u.ListingID == itemId);
-        if (existiing is null)
-        {
-            user.Cart.Add(new CartItems
+            if (!ObjectId.TryParse(dto.ItemId, out var itemId))
+                return BadRequest("Invalid item id");
+
+            var user = _db.Users.FirstOrDefault(u => u.ID == userId);
+            if (user == null)
+                return NotFound("User not found");
+
+            var existiing = user.Cart.FirstOrDefault(u => u.ListingID == itemId);
+            if (existiing is null)
             {
-                ListingID = itemId,
-                Quantity = dto.Quantity > 0 ? dto.Quantity : 1,
-            });
+                user.Cart.Add(new CartItems
+                {
+                    ListingID = itemId,
+                    Quantity = dto.Quantity > 0 ? dto.Quantity : 1,
+                });
+            }
+            else
+            {
+                existiing.Quantity += dto.Quantity > 0 ? dto.Quantity : 1;
+            }
+
+            _ = await _db.SaveChangesAsync(ct);
+            return Ok();
+
         }
-        else
+        catch (Exception ex)
         {
-            existiing.Quantity += dto.Quantity > 0 ? dto.Quantity : 1;
+            Console.WriteLine(ex);
+            return BadRequest();
         }
-        
-        //user.Cart.Add(item);
-        await _db.SaveChangesAsync(ct);
-        return Ok();
     }
 }
