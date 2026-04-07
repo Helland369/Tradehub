@@ -19,7 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer",options =>
+    .AddJwtBearer("Bearer", options =>
     {
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
