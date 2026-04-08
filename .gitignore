@@ -147,3 +147,4 @@ vite.config.ts.timestamp-*
 /backend/uploads
 
 /backend/wwwroot
+/README.html

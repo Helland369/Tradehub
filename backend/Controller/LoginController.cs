@@ -28,11 +28,11 @@ public class LoginController : ControllerBase
             var user = await _db.Users.FirstOrDefaultAsync(u => u.UserName == req.UserName);
             if (user is null)
                 return Unauthorized(new { error = "Invalid credentials" });
-            
+
             var password = _hasher.CheckPasswordHash(req.Password, user.PasswordHash);
             if (!password)
                 return Unauthorized(new { error = "Invalid credentials" });
-            
+
             var token = JwtTokenFactory.CreateToken(user, _config);
             return Ok(token);
         }
