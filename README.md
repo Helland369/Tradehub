@@ -31,6 +31,10 @@ A full-stack marketplace application inspired by eBay, built to explore backend 
 - Database: MongoDB
 - Authentication: JWT
 
+![Tradehub preview](./docs/images/2026-04-08_14-16.png)
+
+See more images here: [Screenshots](./docs/images.md)
+
 # Running the application
 
 ## Clone the repository
