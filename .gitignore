@@ -148,3 +148,4 @@ vite.config.ts.timestamp-*
 
 /backend/wwwroot
 /README.html
+/docs/images.html
